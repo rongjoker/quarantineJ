@@ -50,9 +50,10 @@ public class BioServer implements ServerBase {
 
 
         while (isRunning){
+            System.out.println(" i am listening");
 
                 try {
-                    Socket accept = serverSocket.accept();
+                    Socket accept = serverSocket.accept();//阻塞式block
                     System.out.println("一个客户端建立了连接....");
                     //concurrent invocation
 
