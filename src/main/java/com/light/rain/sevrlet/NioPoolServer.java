@@ -1,5 +1,7 @@
 package com.light.rain.sevrlet;
 
+import org.lr.concurrent.CommonRejectedExecutionHandler;
+import org.lr.concurrent.CommonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,18 +13,23 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  */
-public class NioServer implements ServerBase {
+public class NioPoolServer implements ServerBase {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 
     private boolean isRunning;
 
-    public NioServer(int port) {
+    private ThreadPoolExecutor threadPoolExecutor;
+
+    public NioPoolServer(int port) {
         this.initial(port);
     }
 
@@ -34,7 +41,7 @@ public class NioServer implements ServerBase {
 
     public static void main(String[] args) {
 
-        new NioServer(9999).start();
+        new NioPoolServer(9999).start();
 
     }
 
@@ -60,6 +67,11 @@ public class NioServer implements ServerBase {
 
     @Override
     public void start() {
+
+        threadPoolExecutor = new ThreadPoolExecutor(5, 6, 2, TimeUnit.SECONDS
+                , new ArrayBlockingQueue<>(10)
+                , new CommonThreadFactory()
+                , new CommonRejectedExecutionHandler());
 
         while (isRunning) {
 
@@ -95,37 +107,56 @@ public class NioServer implements ServerBase {
                 }
 
             } else if (selectionKey.isReadable()) {
-                try {
-                    readBuffer.clear();
-                    SocketChannel clientChannel = (SocketChannel) selectionKey.channel();
-                    int readLength = clientChannel.read(readBuffer);
-                    if (readLength == -1) {
-                        selectionKey.channel().close();
-                        selectionKey.cancel();
-                        return;
-                    }
-                    this.readBuffer.flip();
-                    byte[] bytes = new byte[this.readBuffer.remaining()];
-                    this.readBuffer.get(bytes);
-                    LOGGER.info("read form {}:{}", clientChannel.getRemoteAddress(), new String(bytes));
+
+                    selectionKey.interestOps(selectionKey.interestOps() & ~SelectionKey.OP_READ);
+
+                    threadPoolExecutor.execute(()->{
+
+                        ByteBuffer readBufferTemp = ByteBuffer.allocate(1024);
+
+                        SocketChannel clientChannel = (SocketChannel) selectionKey.channel();
+
+                        try {
+                            int readLength = clientChannel.read(readBufferTemp);
+                            if (readLength == -1) {
+                                selectionKey.channel().close();
+                                selectionKey.cancel();
+                                return;
+                            }
+                            this.readBuffer.flip();
+                            byte[] bytes = new byte[readBufferTemp.remaining()];
+                            readBufferTemp.get(bytes);
+                            LOGGER.info("read form {}:{}", clientChannel.getRemoteAddress(), new String(bytes));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
 
-                    NioHTTPSession httpSession = new NioHTTPSession(clientChannel);
-                    selectionKey.attach(httpSession);
+                        NioHTTPSession httpSession = new NioHTTPSession(clientChannel);
+                        selectionKey.attach(httpSession);
 
-                    NioResponse response = new NioResponse();
-                    response.setContent("i am joker with nio".getBytes());
-
-
-                    httpSession.sendResponse(response);//直接写回去response
-
-                    httpSession.close();
+                        NioResponse response = new NioResponse();
+                        response.setContent("i am joker with nio".getBytes());
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    selectionKey.cancel();
-                }
+                        httpSession.sendResponse(response);//直接写回去response
+
+                        httpSession.close();
+
+
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
             } else if (selectionKey.isWritable()) {
                 try {
                     write(selectionKey);

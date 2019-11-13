@@ -2,7 +2,9 @@ package com.light.rain.sevrlet;
 
 public interface ServerBase {
 
-    void start(int port);
+    ServerBase initial(int port);
+
+    void start();
 
 
 

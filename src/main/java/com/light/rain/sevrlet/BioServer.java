@@ -21,20 +21,13 @@ public class BioServer implements ServerBase {
 
 
     @Override
-    public void start(int port) {
+    public BioServer initial(int port) {
 
         try {
             serverSocket = new ServerSocket(port);
             isRunning = true;
 
-            threadPoolExecutor = new ThreadPoolExecutor(5, 6, 2, TimeUnit.SECONDS
-                    , new ArrayBlockingQueue<>(10)
-                    , new CommonThreadFactory()
-                    , new CommonRejectedExecutionHandler());
-
             System.out.println("start service with port "+port);
-
-            listen();
 
 
 
@@ -42,8 +35,22 @@ public class BioServer implements ServerBase {
             e.printStackTrace();
         }
 
+        return this;
 
     }
+
+    @Override
+    public void start() {
+
+        threadPoolExecutor = new ThreadPoolExecutor(5, 6, 2, TimeUnit.SECONDS
+                , new ArrayBlockingQueue<>(10)
+                , new CommonThreadFactory()
+                , new CommonRejectedExecutionHandler());
+
+        listen();
+
+    }
+
 
     private void listen() {
 
@@ -88,8 +95,9 @@ public class BioServer implements ServerBase {
 
     public static void main(String[] args) {
         ServerBase serverBase = new BioServer();
-        serverBase.start(9999);
+        serverBase.initial(9999).start();
     }
+
 
 
 }
