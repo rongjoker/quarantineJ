@@ -7,6 +7,20 @@ import java.nio.ByteBuffer;
 public class BufferTest {
 
 
+
+    @Test
+    public void testFunctionInterface(){
+
+        BarAdvice barAdvice = new BarAdvice();
+
+        TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
+
+        barAdvice.assignable(11,transactionInterceptor::invocation);
+
+
+    }
+
+
     @Test
     public void test1(){
 
