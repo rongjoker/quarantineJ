@@ -1,7 +1,7 @@
 package com.light.rain.sevrlet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,7 +17,7 @@ import java.util.Iterator;
  */
 public class NioServer implements ServerBase {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private final Logger LOGGER = LogManager.getLogger(getClass());
 
 
     private boolean isRunning;

@@ -2,8 +2,8 @@ package com.light.rain.sevrlet;
 
 import org.lr.concurrent.CommonRejectedExecutionHandler;
 import org.lr.concurrent.CommonThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NioPoolServer implements ServerBase {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private final Logger LOGGER = LogManager.getLogger(getClass());
 
 
     private boolean isRunning;
