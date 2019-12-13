@@ -1,4 +1,4 @@
-package com.light.rain.ececption;
+package com.light.rain.exception;
 
 import lombok.Data;
 
