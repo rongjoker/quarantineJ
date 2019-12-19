@@ -1,6 +1,7 @@
 package com.light.rain.server;
 
 import com.light.rain.dispatcher.HttpStaticFileDispatcher;
+import com.light.rain.guice.GuiceCollection;
 import com.light.rain.root.IBuilder;
 import com.light.rain.root.IDispatcher;
 import com.light.rain.root.IFilter;
@@ -19,6 +20,8 @@ import java.util.Map;
 
 @Log4j2
 public class GatherProcess implements IBuilder {
+
+    private GuiceCollection guiceCollection;
 
     private List<IFilter> filters = new ArrayList<>();
 
@@ -99,10 +102,13 @@ public class GatherProcess implements IBuilder {
             log.info("[{}] : [{}]", k, v.getClass().getName());
         });
 
+        guiceCollection = new GuiceCollection();guiceCollection.startInternal();
+
     }
 
     @Override
     public void stopInternal() {
+        guiceCollection.stopInternal();
 
 
     }

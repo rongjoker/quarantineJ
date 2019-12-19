@@ -25,10 +25,19 @@
         <common.lang.version>3.9</common.lang.version>
         <commons-io.version>2.6</commons-io.version>
         <fastjson.version>1.2.61</fastjson.version>
+        <guice.version>4.2.2</guice.version>
     </properties>
 
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
 
         <!-- log -->
 

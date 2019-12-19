@@ -70,7 +70,7 @@ public class GatherBootstrap implements IBuilder {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            ChannelPipeline pipeline = socketChannel.pipeline();
+                            final ChannelPipeline pipeline = socketChannel.pipeline();
 //                            pipeline.addLast(new ReadTimeoutHandler(5));//timeout->5s
                             pipeline.addLast(new HttpServerCodec());//以块的形式进行写
                             pipeline.addLast(new ChunkedWriteHandler());//http请求是分段处理的
