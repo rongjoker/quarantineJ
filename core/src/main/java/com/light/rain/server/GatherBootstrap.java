@@ -36,7 +36,6 @@ public class GatherBootstrap implements IBuilder {
 
     private GatherProcess gatherProcess;
 
-
     private int workThreads = Runtime.getRuntime().availableProcessors();
 
     public GatherBootstrap(String host, int port) {

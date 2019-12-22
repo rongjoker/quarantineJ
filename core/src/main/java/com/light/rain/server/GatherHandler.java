@@ -4,10 +4,7 @@ import com.light.rain.concurrent.CommonRejectedExecutionHandler;
 import com.light.rain.concurrent.CommonThreadFactory;
 import com.light.rain.root.IBuilder;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
@@ -40,6 +37,14 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
         if(httpObject instanceof FullHttpRequest){
             FullHttpRequest fullHttpRequest = (FullHttpRequest)httpObject;
 
+//            String s = ((FullHttpRequest) httpObject).headers().get("Connection");
+
+//            if (!keepAlive) {
+//                ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+//            } else {
+//                response.headers().set(CONNECTION, Values.KEEP_ALIVE);
+//                ctx.writeAndFlush(response);
+
             log.info("fc:[{}]",fullHttpRequest.getClass().getName());
 
             threadPoolExecutor.execute(()->{
@@ -52,14 +57,14 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("ctx:[{}] connect...",ctx.channel().remoteAddress());
+        log.info("ctx:[{}];ctx.channel().id:[{}] connect...",ctx.channel().remoteAddress(),ctx.channel().id().asLongText());
 
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("ctx:[{}] close...",ctx.channel().remoteAddress());
-        ctx.close();
+//        ctx.close();
     }
 
     @Override

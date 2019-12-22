@@ -1,4 +1,4 @@
-package com.light.rain.test.demo;
+package com.light.rain.example;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

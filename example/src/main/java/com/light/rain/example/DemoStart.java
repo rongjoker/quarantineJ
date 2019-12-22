@@ -1,4 +1,5 @@
-package com.light.rain.test.demo;
+package com.light.rain.example;
+
 
 import com.light.rain.server.GatherBootstrap;
 import com.light.rain.server.GatherProcess;
@@ -24,6 +25,7 @@ public class DemoStart {
 
                                 }
                         )
+                .scan("com.light.rain.example")
 
         ).startInternal();
 
@@ -33,4 +35,5 @@ public class DemoStart {
         }));
 
     }
+
 }

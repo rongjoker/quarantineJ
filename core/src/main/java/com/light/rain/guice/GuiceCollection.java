@@ -15,9 +15,20 @@ public class GuiceCollection implements IBuilder {
 
     private final List<Module> modules = new ArrayList<>();
 
+    private String[] basePackages;
+
     private Injector injector;
 
+    public GuiceCollection(String[] basePackages) {
+        this.basePackages = basePackages;
+    }
+
+    public GuiceCollection() {
+    }
+
     Map<Class,Class> kvs = new HashMap<>();
+
+
 
 
     GuiceCollection add(Class i, Class s){
@@ -37,9 +48,28 @@ public class GuiceCollection implements IBuilder {
     @Override
     public void startInternal() {
 
+        if(null!=basePackages){
+
+            for (String basePackage : basePackages) {
+
+
+
+
+            }
+
+
+
+        }
+
+
+
+
         modules.add(new SimpleModule(kvs));
 
         injector = Guice.createInjector(modules);
+
+
+
 
     }
 

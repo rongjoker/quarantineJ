@@ -1,4 +1,4 @@
-package com.light.rain.test.demo;
+package com.light.rain.example;
 
 import com.alibaba.fastjson.JSON;
 import com.light.rain.root.IDispatcher;

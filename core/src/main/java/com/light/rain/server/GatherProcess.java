@@ -28,6 +28,15 @@ public class GatherProcess implements IBuilder {
     private Map<String, IDispatcher> urlDispatcherMap = new HashMap<>();
     private Map<String, IFix> codeFixMap = new HashMap<>();
 
+
+    public GatherProcess scan(String... basePackages){
+
+        guiceCollection = new GuiceCollection(basePackages);
+
+
+        return this;
+    }
+
     public GatherProcess filter(IFilter filter) {
         filters.add(filter);
         return this;
@@ -102,7 +111,9 @@ public class GatherProcess implements IBuilder {
             log.info("[{}] : [{}]", k, v.getClass().getName());
         });
 
-        guiceCollection = new GuiceCollection();guiceCollection.startInternal();
+
+        if(null!=guiceCollection)
+            guiceCollection.startInternal();
 
     }
 
