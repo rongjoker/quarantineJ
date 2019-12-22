@@ -64,7 +64,7 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("ctx:[{}] close...",ctx.channel().remoteAddress());
-//        ctx.close();
+        ctx.close();
     }
 
     @Override

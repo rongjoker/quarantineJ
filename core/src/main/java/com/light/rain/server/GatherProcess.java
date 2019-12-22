@@ -105,7 +105,7 @@ public class GatherProcess implements IBuilder {
     @Override
     public void startInternal() {
 
-        this.dispatcher("/favicon.ico",new HttpStaticFileDispatcher());
+        this.dispatcher("/favicon_bk.ico",new HttpStaticFileDispatcher());
 
         urlDispatcherMap.forEach((k, v) -> {
             log.info("[{}] : [{}]", k, v.getClass().getName());
