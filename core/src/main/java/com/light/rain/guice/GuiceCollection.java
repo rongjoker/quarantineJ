@@ -5,12 +5,15 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.light.rain.root.IBuilder;
+import com.light.rain.util.ScanKlassUtil;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 public class GuiceCollection implements IBuilder {
 
     private final List<Module> modules = new ArrayList<>();
@@ -27,8 +30,6 @@ public class GuiceCollection implements IBuilder {
     }
 
     Map<Class,Class> kvs = new HashMap<>();
-
-
 
 
     GuiceCollection add(Class i, Class s){
@@ -51,25 +52,14 @@ public class GuiceCollection implements IBuilder {
         if(null!=basePackages){
 
             for (String basePackage : basePackages) {
-
-
-
-
+                ScanKlassUtil scanKlassUtil = new ScanKlassUtil();
+                Map<Class, Class> classClassMap = scanKlassUtil.scanIOC(basePackage,kvs);
             }
-
-
-
         }
-
-
-
 
         modules.add(new SimpleModule(kvs));
 
         injector = Guice.createInjector(modules);
-
-
-
 
     }
 
@@ -91,6 +81,8 @@ public class GuiceCollection implements IBuilder {
         protected void configure() {
 
             kv.forEach((k,v)->{
+                log.info("inject :[{}]-->[{}]",k.getName(),v.getName());
+
                 bind(k).to(v);
             });
         }

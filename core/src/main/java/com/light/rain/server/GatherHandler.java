@@ -45,8 +45,6 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
 //                response.headers().set(CONNECTION, Values.KEEP_ALIVE);
 //                ctx.writeAndFlush(response);
 
-            log.info("fc:[{}]",fullHttpRequest.getClass().getName());
-
             threadPoolExecutor.execute(()->{
                 process.process(ctx,fullHttpRequest);
 

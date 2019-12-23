@@ -4,18 +4,18 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Log4j2
 public class ScanKlassUtil {
 
     public static void main(String[] args) throws IOException {
         ScanKlassUtil scanKlassUtil = new ScanKlassUtil();
-        scanKlassUtil.scanCandidateComponents("com.light.rain.util");
+        scanKlassUtil.scanIOC("com.light.rain.example",new HashMap<>());
 
     }
     private static final char PACKAGE_SEPARATOR = '.';
@@ -24,11 +24,16 @@ public class ScanKlassUtil {
 
     String CLASSPATH_ALL_URL_PREFIX = "classpath*:";
 
-    private final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
+    private final String DEFAULT_CLASS_PATTERN = ".class";
 
 
     public static String resolveBasePackage(String basePackage) {
         return basePackage.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
+    }
+
+
+    public static String resolveRelativePath(String basePackage) {
+        return basePackage.replace( PATH_SEPARATOR,PACKAGE_SEPARATOR);
     }
 
     protected Resource convertClassLoaderURL(URL url) {
@@ -42,7 +47,12 @@ public class ScanKlassUtil {
         while (resourceUrls.hasMoreElements()) {
             URL url = resourceUrls.nextElement();
             log.info("url:[{}]",url);
-            result.add(convertClassLoaderURL(url));
+
+            try {
+                scanResourceList(result,convertClassLoaderURL(url).getFile(),DEFAULT_CLASS_PATTERN);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -50,53 +60,131 @@ public class ScanKlassUtil {
     }
 
 
-    protected Set<Resource> doFindMatchingFileSystemResources(File rootDir, String subPattern) throws IOException {
+    protected Set<Resource> scanResourceList(Set<Resource> resources, File file,String subPattern){
 
-        Set<File> matchingFiles = retrieveMatchingFiles(rootDir, subPattern);
-        Set<Resource> result = new LinkedHashSet<>(matchingFiles.size());
-        for (File file : matchingFiles) {
-            result.add(new FileSystemResource(file));
-        }
-        return result;
-    }
-
-
-
-    private Set<Class> scanCandidateComponents(String basePackage){
-
-        String rootDirPath = CLASSPATH_ALL_URL_PREFIX +
-                resolveBasePackage(basePackage);
-
-
-        String packageSearchPath = CLASSPATH_ALL_URL_PREFIX +
-                resolveBasePackage(basePackage) + '/' + DEFAULT_RESOURCE_PATTERN;
-//        Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
-
-        try {
-            String locationPattern = rootDirPath.substring("classpath*:".length());
-            log.info("locationPattern:[{}]",locationPattern);
-            Set<Resource> root = this.doFindAllClassPathResources(locationPattern);
-
-            root.forEach(resource -> {
-
+        if(file.isDirectory()){
+            File[] files = file.listFiles();
+            for (File subFile : files) {
+                scanResourceList(resources,subFile,subPattern);
+            }
+        }else {
+            if(file.getName().endsWith(subPattern)){
                 try {
-                    log.info("resource.getFile:[{}]",resource.getFile());
-                } catch (IOException | URISyntaxException e) {
+                    resources.add(new UrlResource(file.toURI()));
+                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
 
+            }
 
-            });
+        }
+
+        return resources;
 
 
-        } catch (IOException e) {
+    }
+
+
+
+public Set<Class> convertFile2Class(Set<Resource> result,String relativePath){
+
+    Set<Class> classLinkedHashSet = new LinkedHashSet<>();
+
+    result.forEach(resource -> {
+
+        String filename = resource.getFilename();
+        String substring = resolveRelativePath(filename.substring(filename.indexOf(relativePath)));
+        String className = substring.substring(0, substring.indexOf(DEFAULT_CLASS_PATTERN));
+//        log.info("resource:[{}];className:[{}]",substring,className);
+
+
+        ClassLoader clToUse = getClass().getClassLoader();
+
+        try {
+            Class<?> aClass = clToUse.loadClass(className);
+            classLinkedHashSet.add(aClass);
+
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
 
-        return null;
+    });
+
+    return classLinkedHashSet;
+
+}
+
+
+    private Set<Class> scanCandidateComponents(String basePackage){
+
+        String relativePath = resolveBasePackage(basePackage);
+
+        String rootDirPath = CLASSPATH_ALL_URL_PREFIX +relativePath;
+
+        Set<Resource> result = new LinkedHashSet<>();
+
+        try {
+            String locationPattern = rootDirPath.substring("classpath*:".length());
+            log.info("locationPattern:[{}]",locationPattern);
+            result = this.doFindAllClassPathResources(locationPattern);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return convertFile2Class(result,relativePath);
 
     }
+
+    /**
+     * 检查附带Singleton注解的类
+     * @param c
+     * @return
+     */
+    public boolean checkIOCBean(Class c){
+
+        Annotation[] annotations = c.getAnnotations();
+
+        for (Annotation annotation : annotations) {
+            if(annotation instanceof  com.google.inject.Singleton) return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * 扫描ioc
+     * @param basePackage
+     * @return
+     */
+    public Map<Class,Class> scanIOC(String basePackage,Map<Class,Class> kvs){
+
+        Set<Class> classes = this.scanCandidateComponents(basePackage);
+
+        classes.forEach(klass->{
+
+            if(checkIOCBean(klass)){
+                Class[] interfaces = klass.getInterfaces();
+                if(null!=interfaces && interfaces.length>0){
+                    for (Class anInterface : interfaces) {
+                        kvs.put(anInterface,klass);
+                    }
+                }else {
+                    kvs.put(klass,klass);
+                }
+            }
+        });
+
+        return kvs;
+
+    }
+
+
+
+
+
+
 
 
 }

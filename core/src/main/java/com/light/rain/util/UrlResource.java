@@ -110,7 +110,7 @@ public class UrlResource implements Resource {
 	@Nullable
 	@Override
 	public String getFilename() {
-		return null;
+		return this.url.getPath();
 	}
 
 	@Override
@@ -121,5 +121,10 @@ public class UrlResource implements Resource {
 	@Override
 	public InputStream getInputStream() throws IOException {
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "url:"+url;
 	}
 }
