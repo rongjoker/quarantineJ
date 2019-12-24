@@ -5,8 +5,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.light.rain.root.IBuilder;
-import com.light.rain.router.RouterCollection;
 import com.light.rain.util.ScanKlassUtil;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.*;
@@ -14,14 +14,14 @@ import java.util.*;
 @Log4j2
 public class GuiceCollection implements IBuilder {
 
-    RouterCollection routerCollection;
-
     private final List<Module> modules = new ArrayList<>();
 
     private String[] basePackages;
 
+    @Getter
     private Injector injector;
 
+    @Getter
     private Set<Class> earlyDispatchers;
 
     public GuiceCollection(String[] basePackages) {
@@ -67,9 +67,7 @@ public class GuiceCollection implements IBuilder {
 
         earlyDispatchers = kvs.keySet();
 
-        RouterCollection routerCollection = new RouterCollection(injector,earlyDispatchers);
 
-        routerCollection.startInternal();
 
 
     }

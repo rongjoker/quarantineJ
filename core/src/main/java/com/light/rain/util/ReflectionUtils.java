@@ -52,7 +52,7 @@ public class ReflectionUtils {
                             routerInvoke.setObject(object).setMethod(declaredMethod).setPath(path).setRouterMethods(router.method());
                             methods.add(routerInvoke);
 
-                            log.info("[{}];method:[{}#{}]",path,clazz.getName(),declaredMethod.getName());
+                            log.debug("[{}];method:[{}#{}]",path,clazz.getName(),declaredMethod.getName());
                         }
                     }
 

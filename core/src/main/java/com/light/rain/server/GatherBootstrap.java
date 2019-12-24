@@ -1,6 +1,7 @@
 package com.light.rain.server;
 
 import com.light.rain.root.IBuilder;
+import com.light.rain.router.RouterCollection;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,6 +27,8 @@ public class GatherBootstrap implements IBuilder {
 
     private final int port;
 
+    private final String protocol;
+
     private GatherHandler gatherHandler;
 
     private ChannelFuture channelFuture = null;
@@ -34,19 +37,22 @@ public class GatherBootstrap implements IBuilder {
 
     private NioEventLoopGroup worker = null;
 
-    private GatherProcess gatherProcess;
+    private RouterCollection router;
+
 
     private int workThreads = Runtime.getRuntime().availableProcessors();
 
     public GatherBootstrap(String host, int port) {
         this.host = host;
         this.port = port;
+        this.protocol = "http://"+host+":"+port;
 
     }
 
 
-    public GatherBootstrap setGatherProcess(GatherProcess gatherProcess) {
-        this.gatherProcess = gatherProcess;
+    public GatherBootstrap setGatherProcess(RouterCollection router) {
+        this.router = router;
+        this.router.setProtocol(this.protocol);
         return this;
     }
 
@@ -56,7 +62,7 @@ public class GatherBootstrap implements IBuilder {
         boss = new NioEventLoopGroup(1);
         worker = new NioEventLoopGroup(workThreads);
 
-        gatherHandler = new GatherHandler(this.gatherProcess);
+        gatherHandler = new GatherHandler(this.router);
 
         gatherHandler.startInternal();
 

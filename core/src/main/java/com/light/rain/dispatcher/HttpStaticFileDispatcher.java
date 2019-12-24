@@ -15,7 +15,6 @@
  */
 package com.light.rain.dispatcher;
 
-import com.light.rain.root.IDispatcher;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -26,7 +25,10 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.internal.SystemPropertyUtil;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,7 +43,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * 下载文件
  * @author rongjoker
  */
-public class HttpStaticFileDispatcher implements IDispatcher {
+public class HttpStaticFileDispatcher  {
 
     public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
@@ -49,7 +51,6 @@ public class HttpStaticFileDispatcher implements IDispatcher {
 
     private FullHttpRequest request;
 
-    @Override
     public void doServlet(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         this.request = request;
         if (!request.decoderResult().isSuccess()) {

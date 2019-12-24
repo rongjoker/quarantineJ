@@ -1,13 +1,10 @@
 package com.light.rain.root;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
+import com.light.rain.router.RouterRequest;
 
 @FunctionalInterface
 public interface IDispatcher {
 
-    void doServlet(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception;
-
-
+    Object doServlet(RouterRequest req) throws Exception;
 
 }

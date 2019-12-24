@@ -3,8 +3,12 @@ package com.light.rain.server;
 import com.light.rain.concurrent.CommonRejectedExecutionHandler;
 import com.light.rain.concurrent.CommonThreadFactory;
 import com.light.rain.root.IBuilder;
+import com.light.rain.router.RouterCollection;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
@@ -26,10 +30,10 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
 
     private ThreadPoolExecutor threadPoolExecutor;
 
-    private GatherProcess process;
+    private RouterCollection router;
 
-    public GatherHandler(GatherProcess process) {
-        this.process = process;
+    public GatherHandler(RouterCollection router) {
+        this.router = router;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
 //                ctx.writeAndFlush(response);
 
             threadPoolExecutor.execute(()->{
-                process.process(ctx,fullHttpRequest);
+                router.process(ctx,fullHttpRequest);
 
             });
 
@@ -115,7 +119,7 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
                 , new CommonThreadFactory()
                 , new CommonRejectedExecutionHandler());
 
-        this.process.startInternal();
+        this.router.startInternal();
 
 
     }
@@ -129,7 +133,7 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
             e.printStackTrace();
         }
 
-        this.process.stopInternal();
+        this.router.stopInternal();
 
     }
 }

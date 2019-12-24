@@ -26,6 +26,7 @@
         <commons-io.version>2.6</commons-io.version>
         <fastjson.version>1.2.61</fastjson.version>
         <guice.version>4.2.2</guice.version>
+        <asm.version>7.2</asm.version>
     </properties>
 
 
@@ -99,6 +100,13 @@
             <artifactId>javax.activation</artifactId>
             <version>1.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+
 
     </dependencies>
 
