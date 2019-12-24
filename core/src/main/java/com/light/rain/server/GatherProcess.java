@@ -80,6 +80,12 @@ public class GatherProcess implements IBuilder {
 
     }
 
+    /**
+     * 处理异常
+     * @param ctx
+     * @param req
+     * @param code 404，500 etc.
+     */
     private void fix(final ChannelHandlerContext ctx, final FullHttpRequest req, int code) {
 
         IFix fix = codeFixMap.get(code);

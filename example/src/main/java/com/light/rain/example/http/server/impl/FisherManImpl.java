@@ -10,7 +10,9 @@ import lombok.extern.log4j.Log4j2;
 @Singleton
 public class FisherManImpl implements FisherMan, FisherMan2 {
 
-
+    public FisherManImpl() {
+        log.info("i am an old man");
+    }
 
     @Router(path="fisherman")
     public String http(String boat) {
@@ -20,7 +22,10 @@ public class FisherManImpl implements FisherMan, FisherMan2 {
 
 
     @Override
+    @Router(path="fisherman")
     public String fish(String boat) {
+        log.info("i will say: [{}]","i am an old man,i want to get a big fish");
+
         return "i am an old man,i want to get a big fish";
     }
 

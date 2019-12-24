@@ -5,22 +5,24 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.light.rain.root.IBuilder;
+import com.light.rain.router.RouterCollection;
 import com.light.rain.util.ScanKlassUtil;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 public class GuiceCollection implements IBuilder {
+
+    RouterCollection routerCollection;
 
     private final List<Module> modules = new ArrayList<>();
 
     private String[] basePackages;
 
     private Injector injector;
+
+    private Set<Class> earlyDispatchers;
 
     public GuiceCollection(String[] basePackages) {
         this.basePackages = basePackages;
@@ -51,15 +53,24 @@ public class GuiceCollection implements IBuilder {
 
         if(null!=basePackages){
 
+            log.info("初始化IOC容器");
+
             for (String basePackage : basePackages) {
                 ScanKlassUtil scanKlassUtil = new ScanKlassUtil();
-                Map<Class, Class> classClassMap = scanKlassUtil.scanIOC(basePackage,kvs);
+                scanKlassUtil.scanIOC(basePackage,kvs);
             }
         }
 
         modules.add(new SimpleModule(kvs));
 
         injector = Guice.createInjector(modules);
+
+        earlyDispatchers = kvs.keySet();
+
+        RouterCollection routerCollection = new RouterCollection(injector,earlyDispatchers);
+
+        routerCollection.startInternal();
+
 
     }
 
