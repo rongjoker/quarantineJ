@@ -1,7 +1,11 @@
-package com.light.rain.example.test;
+package com.light.rain.asm;
 
+import com.light.rain.util.ReflectionUtils;
 import lombok.extern.log4j.Log4j2;
-import org.objectweb.asm.*;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.lang.reflect.Member;
 import java.util.Map;
@@ -23,10 +27,6 @@ public class MethodVisitorPrint extends MethodVisitor {
 
     private boolean hasLvtInfo = false;
 
-    /*
-     * The nth entry contains the slot index of the LVT table entry holding the
-     * argument name for the nth parameter.
-     */
     private final int[] lvtSlotIndex;
 
     public MethodVisitorPrint(Class<?> clazz, Map<Member, String[]> map, String name, String desc, boolean isStatic) {
@@ -74,10 +74,6 @@ public class MethodVisitorPrint extends MethodVisitor {
     @Override
     public void visitEnd() {
         if (this.hasLvtInfo || (this.isStatic && this.parameterNames.length == 0)) {
-            // visitLocalVariable will never be called for static no args methods
-            // which doesn't use any local variables.
-            // This means that hasLvtInfo could be false for that kind of methods
-            // even if the class has local variable info.
             Member member = resolveMember();
             if(null!=member)
             this.memberMap.put(member, this.parameterNames);
@@ -91,17 +87,12 @@ public class MethodVisitorPrint extends MethodVisitor {
         ClassLoader loader = this.clazz.getClassLoader();
         Class<?>[] argTypes = new Class<?>[this.args.length];
         for (int i = 0; i < this.args.length; i++) {
-            try {
-                argTypes[i] = loader.loadClass(this.args[i].getClassName());
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-//            argTypes[i] = ClassUtils.resolveClassName(this.args[i].getClassName(), loader);
+            argTypes[i] = ReflectionUtils.getClassByName(this.args[i].getClassName(),loader);
         }
         try {
             if (CONSTRUCTOR.equals(this.name) || CLOSESTRUCTOR.equals(this.name)) {
-                return null;//构造方法暂时不使用
-//                return this.clazz.getDeclaredConstructor(argTypes);
+//                return null;//构造方法暂时不使用
+                return this.clazz.getDeclaredConstructor(argTypes);
             }
             return this.clazz.getDeclaredMethod(this.name, argTypes);
         }

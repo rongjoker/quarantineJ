@@ -1,14 +1,12 @@
 package com.light.rain.example.test;
 
 import com.light.rain.example.http.server.impl.FisherManImpl;
+import com.light.rain.util.RouterUtil;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
-import org.objectweb.asm.ClassReader;
 
 import java.io.IOException;
-import java.lang.reflect.Member;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.lang.reflect.Method;
 
 @Log4j2
 public class AsmTest {
@@ -19,21 +17,16 @@ public class AsmTest {
 
         Class<FisherManImpl> fisherManClass = FisherManImpl.class;
 
-
-        Map<Member, String[]> map = new ConcurrentHashMap<>(32);
-
-        ClassReader reader = new ClassReader(FisherManImpl.class.getName());
-        ClassPrinter classPrinter = new ClassPrinter(fisherManClass,map);
-
-        reader.accept(classPrinter,0);
-
-        map.forEach((k,v)->{
-
-            log.info("k:[{}];v:[{}]",k,v);
+        for (Method declaredMethod : fisherManClass.getDeclaredMethods()) {
+            String[] params = RouterUtil.params(declaredMethod);
+            log.info("declaredMethod:[{}];params:[{}]",declaredMethod.getName(),params);
+            log.info("params:[{}]",params);
+            log.info("params2:[{}]",params.length);
+        }
 
 
 
-        });
+
 
 
 

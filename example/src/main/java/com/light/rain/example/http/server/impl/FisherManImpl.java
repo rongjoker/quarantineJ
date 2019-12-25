@@ -16,7 +16,11 @@ public class FisherManImpl implements FisherMan, FisherMan2 {
     }
 
     @Router(path="fisherman2")
-    public String http(String boat) {
+    public String http(String boat,String name,int count) {
+
+        log.info("boat:[{}];name:[{}];count:[{}]",boat,name,count);
+
+
         return this.fish(boat);
     }
 
