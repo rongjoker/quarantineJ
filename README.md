@@ -98,12 +98,15 @@ public class FisherManImpl implements FisherMan, FisherMan2 {
 3. 配置好直接run即可
 
 
-#有关reactor模式
+# 有关reactor模式
 有关`reactor`模式,最好的说明是两张图，两张图胜过千言万语
-![reactor](https://github.com/rongjoker/quarantineJ/tree/joker_dev/core/src/main/document/1.png)
-
-![nio](https://github.com/rongjoker/quarantineJ/tree/joker_dev/core/src/main/document/2.png)
-
+<p align="center">
+  <img src="https://github.com/rongjoker/quarantineJ/blob/joker_dev/core/src/main/document/1.png?raw=false" alt="reactor">
+</p>
+-
+<p align="center">
+  <img src="https://github.com/rongjoker/quarantineJ/blob/joker_dev/core/src/main/document/2.png?raw=false" alt="nio">
+</p>
 # 为什么quarantineJ
 1. `spring-boot` 早就内嵌了`tomcat`和`jetty`,为什么还要开发quarantineJ？你的功能在spring面前就是个弟中弟，开发quarantineJ有什么意义？答：虽然现在微服务大行其道，功能完善，考虑周到，但是
 实际工作中，往往我们需要一个轻量的很小的`restful`接口服务，`tomcat`和`spring`太强大，在这种场景下，相当于杀鸡用牛刀，基于`spring`的程序，即使功能很简单，最终生成的jar包也非常大，启动时间
