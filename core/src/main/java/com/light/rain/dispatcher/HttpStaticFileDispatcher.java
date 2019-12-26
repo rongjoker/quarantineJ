@@ -40,7 +40,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
- * 下载文件
+ * 静态文件分发器
  * @author rongjoker
  */
 public class HttpStaticFileDispatcher  {

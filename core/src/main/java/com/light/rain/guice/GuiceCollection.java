@@ -11,6 +11,11 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.*;
 
+/**
+ * 利用谷歌的guice实现ioc容器
+ * 添加了扫描目录的功能
+ * 添加了多接口单实现加入ioc容器的功能
+ */
 @Log4j2
 public class GuiceCollection implements IBuilder {
 

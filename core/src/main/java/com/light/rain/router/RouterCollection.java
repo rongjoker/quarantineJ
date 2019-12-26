@@ -28,6 +28,7 @@ import java.util.Map;
 
 /**
  * 路由处理类
+ * 支持极简的路由转发，也支持扩展的复杂业务代码逻辑
  *
  * @author rongjoker
  */

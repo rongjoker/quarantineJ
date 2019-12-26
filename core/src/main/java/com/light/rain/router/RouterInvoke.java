@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.lang.reflect.Method;
 
 /**
- * 路由操作bean
+ * 路由操作实体
  * @author rongjoker
  *
  */

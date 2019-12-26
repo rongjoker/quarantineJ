@@ -10,8 +10,11 @@ import org.objectweb.asm.Type;
 import java.lang.reflect.Member;
 import java.util.Map;
 
+/**
+ * 方法读取
+ */
 @Log4j2
-public class MethodVisitorPrint extends MethodVisitor {
+public class SimpleMethodVisitor extends MethodVisitor {
 
     private final Class<?> clazz;
 
@@ -29,7 +32,7 @@ public class MethodVisitorPrint extends MethodVisitor {
 
     private final int[] lvtSlotIndex;
 
-    public MethodVisitorPrint(Class<?> clazz, Map<Member, String[]> map, String name, String desc, boolean isStatic) {
+    public SimpleMethodVisitor(Class<?> clazz, Map<Member, String[]> map, String name, String desc, boolean isStatic) {
         super(Opcodes.ASM6);
         this.clazz = clazz;
         this.memberMap = map;

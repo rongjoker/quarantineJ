@@ -7,13 +7,16 @@ import org.objectweb.asm.Opcodes;
 import java.lang.reflect.Member;
 import java.util.Map;
 
-public class ClassPrinter extends ClassVisitor {
+/**
+ * 类读取
+ */
+public class SimpleClassVisitor extends ClassVisitor {
 
     private final Class<?> clazz;
 
     private final Map<Member, String[]> memberMap;
 
-    public ClassPrinter(Class<?> clazz, Map<Member, String[]> memberMap) {
+    public SimpleClassVisitor(Class<?> clazz, Map<Member, String[]> memberMap) {
         super(Opcodes.ASM6);
         this.clazz = clazz;
         this.memberMap = memberMap;
@@ -21,9 +24,9 @@ public class ClassPrinter extends ClassVisitor {
 
     public MethodVisitor visitMethod(int access, String name,
                                      String desc, String signature, String[] exceptions){
-        MethodVisitorPrint methodVisitorPrint = new MethodVisitorPrint(clazz, memberMap, name, desc, isStatic(access));
+        SimpleMethodVisitor simpleMethodVisitor = new SimpleMethodVisitor(clazz, memberMap, name, desc, isStatic(access));
 
-        return methodVisitorPrint;
+        return simpleMethodVisitor;
     }
 
     private static boolean isStatic(int access) {

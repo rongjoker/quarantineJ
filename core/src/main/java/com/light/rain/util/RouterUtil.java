@@ -1,6 +1,6 @@
 package com.light.rain.util;
 
-import com.light.rain.asm.ClassPrinter;
+import com.light.rain.asm.SimpleClassVisitor;
 import com.light.rain.router.RouterRequest;
 import lombok.extern.log4j.Log4j2;
 import org.objectweb.asm.ClassReader;
@@ -30,9 +30,9 @@ public class RouterUtil {
             map = new ConcurrentHashMap<>(32);
 
             ClassReader reader = new ClassReader(declaringClass.getName());
-            ClassPrinter classPrinter = new ClassPrinter(declaringClass,map);
+            SimpleClassVisitor simpleClassVisitor = new SimpleClassVisitor(declaringClass,map);
 
-            reader.accept(classPrinter,0);
+            reader.accept(simpleClassVisitor,0);
             RouterUtil.parameterNamesCache.put(declaringClass, map);
         }
 
