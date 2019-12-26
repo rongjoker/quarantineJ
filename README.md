@@ -7,8 +7,8 @@
 [**功能**](https://github.com/rongjoker/quarantineJ#功能)  
 [**安装**](https://github.com/rongjoker/quarantineJ#安装)  
 [**用法**](https://github.com/rongjoker/quarantineJ#用法)  
+[**有关reactor模式**](https://github.com/rongjoker/quarantineJ#有关reactor模式) 
 [**为什么quarantineJ**](https://github.com/rongjoker/quarantineJ#为什么quarantineJ)  
-[**有关reactor模式**](https://github.com/rongjoker/quarantineJ#有关reactor模式)  
 [**历史版本**](https://github.com/rongjoker/quarantineJ#历史版本)  
 
 # 功能
