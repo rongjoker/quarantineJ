@@ -2,6 +2,7 @@ package com.light.rain.server;
 
 import com.light.rain.concurrent.CommonRejectedExecutionHandler;
 import com.light.rain.concurrent.CommonThreadFactory;
+import com.light.rain.concurrent.QuarantineBlockingQueue;
 import com.light.rain.root.IBuilder;
 import com.light.rain.router.RouterCollection;
 import io.netty.buffer.ByteBufAllocator;
@@ -15,7 +16,6 @@ import io.netty.util.CharsetUtil;
 import lombok.extern.log4j.Log4j2;
 
 import java.net.SocketAddress;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -114,10 +114,14 @@ public class GatherHandler extends SimpleChannelInboundHandler<HttpObject> imple
     @Override
     public void startInternal() {
 
+        QuarantineBlockingQueue workQueue = new QuarantineBlockingQueue();
+
         this.threadPoolExecutor = new ThreadPoolExecutor(threads, threads <<4, 60, TimeUnit.SECONDS
-                , new LinkedBlockingQueue<>()
-                , new CommonThreadFactory()
+                , workQueue
+                , new CommonThreadFactory("http-handler")
                 , new CommonRejectedExecutionHandler());
+
+        workQueue.setThreadPoolExecutor(this.threadPoolExecutor);
 
         this.router.startInternal();
 

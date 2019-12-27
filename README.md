@@ -20,6 +20,7 @@
 * 旧的session实现得不好，已移除，新的session的支持还在开发中
 * ddd(Domain Driven Design)的支持已经在路上，由于之前项目里开发过相似功能，所以这个功能可能会先上
 * 所有模块都支持functional-programming，有一部分功能因为快速开发，抽象程度还不够，后续会优化
+* 采用QuarantineBlockingQueue作为阻塞队列，重写了线程池的逻辑，最大程度满足io请求的并发处理速度
 > 当前版本采用netty进行重构，翻掉了大量的代码，目前框架还处于0.1-beta版本，非常鲜嫩，很不完善。
 > 如果你有任何新的需求或者想法意见,可以在issue中提出，欢迎star和fork~
 
