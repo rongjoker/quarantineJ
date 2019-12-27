@@ -21,6 +21,7 @@ public class ThreadTest {
         ThreadPoolExecutor threadPoolExecutor = null;
 
         QuarantineBlockingQueue workQueue = new QuarantineBlockingQueue();
+
         int threads = 5;
         threadPoolExecutor = new ThreadPoolExecutor(threads, threads *2, 10, TimeUnit.SECONDS
                 , workQueue
@@ -35,11 +36,16 @@ public class ThreadTest {
 
 
         for (int i = 0; i < 100; i++) {
-            log.info("add thread----[{}]",i);
+            try {
+                TimeUnit.MILLISECONDS.sleep(8);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("add runnable----[{}]",i);
             threadPoolExecutor.execute(()->{
 
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -67,7 +73,7 @@ public class ThreadTest {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * LinkedBlockingQueue配合ThreadPoolExecutor使用，适合cpu密集型的并发作业，
  * 因为队列容量是Integer.MAX,所以理论上只能开启corePoolSize个线，程无法激发maximumPoolSize
  * QuarantineBlockingQueue调整了逻辑，探测threadPoolExecutor的线程大小，能够开启maximumPoolSize个线程
+ * tomcat or jetty 都采用了更加复杂的实现逻辑，比如tomcat，重写了ThreadPoolExecutor，计算存活的线程任务，来决定是加入队列，还是创建线程
  */
 public class QuarantineBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
@@ -22,7 +23,7 @@ public class QuarantineBlockingQueue extends LinkedBlockingQueue<Runnable> {
             return super.offer(o);
         if (threadPoolExecutor.getPoolSize() == threadPoolExecutor.getMaximumPoolSize())
             return super.offer(o);
-        if (threadPoolExecutor.getPoolSize()<threadPoolExecutor.getMaximumPoolSize()){//覆盖功能的一步，尽量创建线程，直到MaximumPoolSize,而不是把任务放入queue里
+        if (threadPoolExecutor.getCorePoolSize()<=threadPoolExecutor.getActiveCount() && threadPoolExecutor.getActiveCount()<threadPoolExecutor.getMaximumPoolSize()){//覆盖功能的一步，尽量创建线程，直到MaximumPoolSize,而不是把任务放入queue里
             return false;
         }
 

@@ -106,7 +106,7 @@ public class RouterCollection implements IBuilder {
         }
 
 
-        log.info("ctx:[{}];uri:[{}:{}]", ctx.channel().remoteAddress(),method, uri);
+        log.info("[{}] -- ctx:[{}];uri:[{}:{}]",Thread.currentThread().getName(), ctx.channel().remoteAddress(),method, uri);
 
         var iDispatcher = urlDispatcherMap.get(routerRequest);
 
@@ -124,6 +124,10 @@ public class RouterCollection implements IBuilder {
                 res.headers().add(HttpHeaderNames.CONTENT_TYPE, String.format("%s; charset=utf-8", "text/json"));
                 res.headers().add(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes());
                 ctx.writeAndFlush(res);
+
+//                ctx.channel().close();//暂时不支持keep-alive
+//                ctx.close();
+
 
 
 
