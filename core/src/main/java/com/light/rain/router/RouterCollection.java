@@ -12,6 +12,7 @@ import com.light.rain.root.IFix;
 import com.light.rain.util.HttpUtil;
 import com.light.rain.util.ReflectionUtils;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
@@ -115,13 +116,13 @@ public class RouterCollection implements IBuilder {
 
                 String  toJSON = JSON.toJSONString(hello_world);
 
-                var buf = ByteBufAllocator.DEFAULT.buffer();
-                var bytes = toJSON.getBytes(CharsetUtil.UTF_8);
-                buf.writeBytes(bytes);
+                var buf = Unpooled.copiedBuffer(toJSON.getBytes(CharsetUtil.UTF_8));
+//                var bytes = toJSON.getBytes(CharsetUtil.UTF_8);
+//                buf.writeBytes(bytes);
                 DefaultFullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
                         HttpResponseStatus.valueOf(200), buf);
                 res.headers().add(HttpHeaderNames.CONTENT_TYPE, String.format("%s; charset=utf-8", "text/json"));
-                res.headers().add(HttpHeaderNames.CONTENT_LENGTH, bytes.length);
+                res.headers().add(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes());
                 ctx.writeAndFlush(res);
 
 

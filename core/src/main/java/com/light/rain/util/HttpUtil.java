@@ -1,6 +1,7 @@
 package com.light.rain.util;
 
 import com.light.rain.router.RouterRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -17,6 +18,8 @@ public class HttpUtil {
     public static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
         Map<String, String> query_pairs = new LinkedHashMap<String, String>();
         String query = url.getQuery();
+        if(StringUtils.isBlank(query))
+            return null;
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
