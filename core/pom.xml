@@ -20,7 +20,7 @@
         <netty.version>4.1.43.Final</netty.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <lombok-version>1.18.10</lombok-version>
-        <log4j2.version>2.12.1</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
         <commons-codec.version>1.13</commons-codec.version>
         <common.lang.version>3.9</common.lang.version>
         <commons-io.version>2.6</commons-io.version>
