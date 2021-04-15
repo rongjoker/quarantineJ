@@ -116,7 +116,7 @@ public class FisherManImpl implements FisherMan, FisherMan2 {
 2. 也许你已经把`tomcat`的源码，`spring`的源码，甚至`mybatis`的源码都翻得熟透，但是如果你没有动手实现一个自己的`tomcat+spring/mybatis`，遇到细节的问题还是很困惑，比如一个最简单的问题，`spring`
 的路由功能是如果将`queryString`和方法的参数一一对应的？比如`spring-ioc`是如何解决循环依赖的？`spring`动态代理为什么只触发一次构造方法？
 3. 有很多奇妙的想法，无法在公司项目里实现，在quarantineJ里可以大胆的尝试，甚至随心所欲的按自己的理解来尝试，而不是对着框架的`guides`来敲代码，比如，我觉得`mybatis`太boring,想尝试下ddd...
-4. 为什么要造轮子: [我们为什么要造轮子](https://github.com/rongjoker/rongjoker.github.io/blob/master/blog/whywemakecycle.md) 
+4. 为什么要造轮子: [我们为什么要造轮子](https://rongjoker.github.io/2019/lunzi/) 
 5. `netty`真的很棒，无论是它的理念，还是它的代码。比如`spring`源码里，对性能完全无所谓，选择一种数据结构，没有把性能放在第一位考虑，而`netty`疯狂压榨性能，`O(logn)`不满意，一定要`O(1)`才舒服...
 6. quarantineJ 来自我很喜欢的一个电影`The Aviator`(《飞行家》)，电影中男主 `Howard Hughes` 强迫症爆发的时候会一直拼`quarantine`:`Q-U-A-R-A-N-T-I-N-E`
 
