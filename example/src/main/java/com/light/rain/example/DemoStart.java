@@ -31,10 +31,7 @@ public class DemoStart {
 
         ).startInternal();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            gatherBootstrap.stopInternal();
-
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(gatherBootstrap::stopInternal));
 
     }
 

@@ -40,7 +40,7 @@ public class GatherBootstrap implements IBuilder {
     private RouterCollection router;
 
 
-    private int workThreads = Runtime.getRuntime().availableProcessors();
+    private final int workThreads = Runtime.getRuntime().availableProcessors();
 
     public GatherBootstrap(String host, int port) {
         this.host = host;
