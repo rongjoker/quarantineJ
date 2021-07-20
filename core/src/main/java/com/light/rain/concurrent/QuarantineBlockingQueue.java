@@ -23,7 +23,8 @@ public class QuarantineBlockingQueue extends LinkedBlockingQueue<Runnable> {
             return super.offer(o);
         if (threadPoolExecutor.getPoolSize() == threadPoolExecutor.getMaximumPoolSize())
             return super.offer(o);
-        if (threadPoolExecutor.getCorePoolSize()<=threadPoolExecutor.getActiveCount() && threadPoolExecutor.getActiveCount()<threadPoolExecutor.getMaximumPoolSize()){//覆盖功能的一步，尽量创建线程，直到MaximumPoolSize,而不是把任务放入queue里
+        if (threadPoolExecutor.getCorePoolSize()<=threadPoolExecutor.getActiveCount() && threadPoolExecutor.getActiveCount()<threadPoolExecutor.getMaximumPoolSize()){
+            //覆盖功能的一步，尽量创建线程，直到MaximumPoolSize,而不是把任务放入queue里
             return false;
         }
 
