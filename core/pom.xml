@@ -24,7 +24,7 @@
         <commons-codec.version>1.13</commons-codec.version>
         <common.lang.version>3.9</common.lang.version>
         <commons-io.version>2.6</commons-io.version>
-        <fastjson.version>1.2.61</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <guice.version>4.2.2</guice.version>
         <asm.version>7.2</asm.version>
     </properties>
